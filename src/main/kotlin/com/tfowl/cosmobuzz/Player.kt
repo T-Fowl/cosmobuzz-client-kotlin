@@ -11,7 +11,7 @@ data class Player(
     val buzzed: Instant?,
 )
 
-private fun JSONObject.deserializePlayer(): Player? {
+internal fun JSONObject.deserializePlayer(): Player? {
     val id = getStringOrNull("id") ?: return null
     val text = getNullableStringOrNull("text")
     val username = getStringOrNull("username") ?: return null

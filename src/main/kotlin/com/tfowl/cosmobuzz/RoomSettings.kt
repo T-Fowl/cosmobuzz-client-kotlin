@@ -9,7 +9,7 @@ class RoomSettings(
     val roomLocked: Boolean = false,
 )
 
-private fun JSONObject.deserializeRoomSettings(): RoomSettings? {
+internal fun JSONObject.deserializeRoomSettings(): RoomSettings? {
     val buzzersLocked = getBooleanOrNull("buzzersLocked") ?: return null
     val firstBuzzHappened = getBooleanOrNull("firstBuzzHappened") ?: return null
     val onlyFirstBuzz = getBooleanOrNull("onlyFirstBuzz") ?: return null
@@ -17,7 +17,7 @@ private fun JSONObject.deserializeRoomSettings(): RoomSettings? {
     return RoomSettings(buzzersLocked, firstBuzzHappened, onlyFirstBuzz, roomLocked)
 }
 
-private fun RoomSettings.toJsonObject(): JSONObject = JSONObject().apply {
+internal fun RoomSettings.toJsonObject(): JSONObject = JSONObject().apply {
     put("buzzersLocked", buzzersLocked)
     put("firstBuzzHappened", firstBuzzHappened)
     put("onlyFirstBuzz", onlyFirstBuzz)

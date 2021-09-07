@@ -6,26 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
-sealed class IncomingEvent {
-    data class PlayersChanged(val players: List<Player>) : IncomingEvent()
-    data class RoomSettingsChanged(val settings: RoomSettings) : IncomingEvent()
-    data class PlayerBuzzed(val id: String) : IncomingEvent()
-}
-
-sealed class OutgoingEvent {
-    data class UpdateRoomSettings(val settings: RoomSettings) : OutgoingEvent()
-    object ResetBuzzers : OutgoingEvent()
-}
-
-interface CosmoSocket {
-
-    fun receive(callback: (IncomingEvent) -> Unit)
-
-    suspend fun send(event: OutgoingEvent)
-
-    fun disconnect()
-}
-
 class CosmoBuzzRoom(val code: String, private val socket: CosmoSocket) {
     val url: String = URL_FMT.format(code)
 

@@ -4,6 +4,39 @@ import com.tfowl.socketio.emitAwait
 import io.socket.client.Socket
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.Instant
+
+private fun JSONObject.getNullableStringOrNull(key: String): String? =
+    if (isNull(key) || !has(key)) null else getString(key)
+
+private fun JSONObject.getStringOrNull(key: String): String? = if (has(key) && !isNull(key)) getString(key) else null
+
+private fun JSONObject.getBooleanOrNull(key: String): Boolean? =
+    if (has(key) && !isNull(key)) getBoolean(key) else null
+
+private fun JSONObject.deserializePlayer(): Player? {
+    val id = getStringOrNull("id") ?: return null
+    val text = getNullableStringOrNull("text")
+    val username = getStringOrNull("username") ?: return null
+    val buzzed = getNullableStringOrNull("buzzed")?.let { Instant.parse(it) }
+    return Player(id, text, username, buzzed)
+}
+
+
+private fun JSONObject.deserializeRoomSettings(): RoomSettings? {
+    val buzzersLocked = getBooleanOrNull("buzzersLocked") ?: return null
+    val firstBuzzHappened = getBooleanOrNull("firstBuzzHappened") ?: return null
+    val onlyFirstBuzz = getBooleanOrNull("onlyFirstBuzz") ?: return null
+    val roomLocked = getBooleanOrNull("roomLocked") ?: return null
+    return RoomSettings(buzzersLocked, firstBuzzHappened, onlyFirstBuzz, roomLocked)
+}
+
+private fun RoomSettings.toJsonObject(): JSONObject = JSONObject().apply {
+    put("buzzersLocked", buzzersLocked)
+    put("firstBuzzHappened", firstBuzzHappened)
+    put("onlyFirstBuzz", onlyFirstBuzz)
+    put("roomLocked", roomLocked)
+}
 
 class SocketIOCosmoSocket(private val socket: Socket) : CosmoSocket {
 

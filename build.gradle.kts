@@ -23,7 +23,7 @@ dependencies {
         TODO: Use gradle catalog when dependabot supports it
      */
 
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("com.tfowl.socketio:socket-io-coroutines:1.0.1")
 
     testImplementation(kotlin("test"))

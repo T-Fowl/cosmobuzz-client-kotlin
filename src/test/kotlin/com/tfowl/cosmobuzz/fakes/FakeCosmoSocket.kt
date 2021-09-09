@@ -6,7 +6,11 @@ import com.tfowl.cosmobuzz.OutgoingEvent
 import com.tfowl.cosmobuzz.Request
 import java.util.concurrent.atomic.AtomicBoolean
 
-class FakeCosmoSocket(val code: String = "1234") : AbstractCosmoSocket() {
+class FakeCosmoSocket(
+    val reqHandler: (Request<out Any>) -> Any =
+        { throw Throwable("Request not supported: $it") }
+) :
+    AbstractCosmoSocket() {
 
     val sent = mutableListOf<OutgoingEvent>()
     val connected = AtomicBoolean(true)
@@ -18,9 +22,7 @@ class FakeCosmoSocket(val code: String = "1234") : AbstractCosmoSocket() {
     public override fun emit(event: IncomingEvent) = super.emit(event)
 
     override suspend fun <T : Any> request(req: Request<T>): T {
-        return when (req) {
-            is Request.CreateRoom -> code as T
-        }
+        return reqHandler(req) as T
     }
 
     override fun disconnect() {

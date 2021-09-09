@@ -1,7 +1,10 @@
 package com.tfowl.cosmobuzz
 
+import com.tfowl.socketio.connectAwait
 import com.tfowl.socketio.emitAwait
+import io.socket.client.IO
 import io.socket.client.Socket
+import io.socket.engineio.client.transports.WebSocket
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
@@ -66,6 +69,12 @@ class SocketIOCosmoSocket(private val socket: Socket) : AbstractCosmoSocket() {
         }
     }
 
+    override suspend fun <T : Any> request(req: Request<T>): T {
+        return when (req) {
+            is Request.CreateRoom -> socket.emitAwait(REQ_CREATE_ROOM).first().toString() as T
+        }
+    }
+
     override fun disconnect() {
         socket.disconnect()
     }
@@ -75,5 +84,23 @@ class SocketIOCosmoSocket(private val socket: Socket) : AbstractCosmoSocket() {
         private const val EVENT_UPDATE_SETTINGS = "update settings"
         private const val EVENT_PLAYER_BUZZER = "player buzzer"
         private const val EVENT_RESET_BUZZERS = "reset buzzers"
+        private const val REQ_CREATE_ROOM = "create room"
+    }
+}
+
+class SocketIOCosmoSocketFactory(
+    private val uri: String,
+    private val opts: IO.Options = DEFAULT_OPTS
+) : CosmoSocketFactory {
+
+    override suspend fun create(): CosmoSocket {
+        val socket = IO.socket(uri, opts).connectAwait()
+        return SocketIOCosmoSocket(socket)
+    }
+
+    companion object {
+        private val DEFAULT_OPTS = IO.Options().apply {
+            transports = arrayOf(WebSocket.NAME)
+        }
     }
 }

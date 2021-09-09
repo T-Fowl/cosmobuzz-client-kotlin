@@ -11,11 +11,17 @@ sealed class OutgoingEvent {
     object ResetBuzzers : OutgoingEvent()
 }
 
+sealed class Request<T : Any> {
+    object CreateRoom : Request<String>()
+}
+
 interface CosmoSocket {
 
     fun receive(callback: (IncomingEvent) -> Unit)
 
     suspend fun send(event: OutgoingEvent)
+
+    suspend fun <T : Any> request(req: Request<T>): T
 
     fun disconnect()
 }
@@ -30,4 +36,8 @@ abstract class AbstractCosmoSocket : CosmoSocket {
     protected open fun emit(event: IncomingEvent) {
         listeners.forEach { it(event) }
     }
+}
+
+interface CosmoSocketFactory {
+    suspend fun create(): CosmoSocket
 }

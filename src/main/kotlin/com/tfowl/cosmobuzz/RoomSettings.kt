@@ -1,6 +1,6 @@
 package com.tfowl.cosmobuzz
 
-class RoomSettings(
+data class RoomSettings(
     val buzzersLocked: Boolean = false,
     val firstBuzzHappened: Boolean = false,
     val onlyFirstBuzz: Boolean = false,

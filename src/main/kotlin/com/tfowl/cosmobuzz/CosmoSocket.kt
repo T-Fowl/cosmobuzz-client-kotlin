@@ -19,3 +19,15 @@ interface CosmoSocket {
 
     fun disconnect()
 }
+
+abstract class AbstractCosmoSocket : CosmoSocket {
+    private val listeners = mutableListOf<(IncomingEvent) -> Unit>()
+
+    override fun receive(callback: (IncomingEvent) -> Unit) {
+        listeners += callback
+    }
+
+    protected open fun emit(event: IncomingEvent) {
+        listeners.forEach { it(event) }
+    }
+}

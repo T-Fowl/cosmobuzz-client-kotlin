@@ -38,9 +38,7 @@ private fun RoomSettings.toJsonObject(): JSONObject = JSONObject().apply {
     put("roomLocked", roomLocked)
 }
 
-class SocketIOCosmoSocket(private val socket: Socket) : CosmoSocket {
-
-    private val listeners = mutableListOf<(IncomingEvent) -> Unit>()
+class SocketIOCosmoSocket(private val socket: Socket) : AbstractCosmoSocket() {
 
     init {
         socket.on(EVENT_UPDATE_SETTINGS) { args ->
@@ -56,14 +54,6 @@ class SocketIOCosmoSocket(private val socket: Socket) : CosmoSocket {
             val id = args.first().toString()
             emit(IncomingEvent.PlayerBuzzed(id))
         }
-    }
-
-    private fun emit(event: IncomingEvent) {
-        listeners.forEach { it(event) }
-    }
-
-    override fun receive(callback: (IncomingEvent) -> Unit) {
-        listeners += callback
     }
 
     override suspend fun send(event: OutgoingEvent) {

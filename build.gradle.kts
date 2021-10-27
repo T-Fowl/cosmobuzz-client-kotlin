@@ -27,7 +27,7 @@ dependencies {
     implementation("com.tfowl.socketio:socket-io-coroutines:1.0.1")
 
     testImplementation(kotlin("test"))
-    testImplementation("app.cash.turbine:turbine:0.6.1")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
 }
 

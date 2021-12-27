@@ -5,7 +5,7 @@ import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.5.30"
-    id("org.jetbrains.dokka") version "1.5.0"
+    id("org.jetbrains.dokka") version "1.6.10"
     `maven-publish`
     signing
 }

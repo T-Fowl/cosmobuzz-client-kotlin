@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.8.10"
     id("org.jetbrains.dokka") version "1.5.0"
     `maven-publish`
     signing
